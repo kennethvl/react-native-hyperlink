@@ -70,39 +70,36 @@ class Hyperlink extends Component {
 
     try {
       this.linkifyIt.match(component.props.children).forEach(({ index, lastIndex, text, url }) => {
-        debugger
         if (text.indexOf("tokopedia.com") != -1 || text.indexOf("tkp.me") != -1) {
-          return
-        }
+          let nonLinkedText = component.props.children.substring(_lastIndex, index)
+          nonLinkedText && elements.push(nonLinkedText)
+          _lastIndex = lastIndex
+          if (this.props.linkText)
+            text = typeof this.props.linkText === 'function'
+                ? this.props.linkText(url)
+                : this.props.linkText
 
-        let nonLinkedText = component.props.children.substring(_lastIndex, index)
-        nonLinkedText && elements.push(nonLinkedText)
-        _lastIndex = lastIndex
-        if (this.props.linkText)
-          text = typeof this.props.linkText === 'function'
-              ? this.props.linkText(url)
-              : this.props.linkText
-
-        const clickHandlerProps = {}
-        if (OS !== 'web') {
-          clickHandlerProps.onLongPress = this.props.onLongPress 
-            ? () => this.props.onLongPress(url, text)
+          const clickHandlerProps = {}
+          if (OS !== 'web') {
+            clickHandlerProps.onLongPress = this.props.onLongPress 
+              ? () => this.props.onLongPress(url, text)
+              : undefined
+          }
+          clickHandlerProps.onPress = this.props.onPress
+            ? () => this.props.onPress(url, text)
             : undefined
-        }
-        clickHandlerProps.onPress = this.props.onPress
-          ? () => this.props.onPress(url, text)
-          : undefined
 
-        elements.push(
-          <Text
-            { ...componentProps }
-            { ...clickHandlerProps }
-            key={ url + index }
-            style={ [ component.props.style, this.props.linkStyle ] }
-          >
-            { text }
-          </Text>
-        )
+          elements.push(
+            <Text
+              { ...componentProps }
+              { ...clickHandlerProps }
+              key={ url + index }
+              style={ [ component.props.style, this.props.linkStyle ] }
+            >
+              { text }
+            </Text>
+          )
+        }
       })
       elements.push(component.props.children.substring(_lastIndex, component.props.children.length))
       return React.cloneElement(component, componentProps, elements)
