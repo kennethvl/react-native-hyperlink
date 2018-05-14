@@ -70,6 +70,7 @@ class Hyperlink extends Component {
 
     try {
       this.linkifyIt.match(component.props.children).forEach(({ index, lastIndex, text, url }) => {
+        console.log("😀 URL: " + url);
         let nonLinkedText = component.props.children.substring(_lastIndex, index)
         nonLinkedText && elements.push(nonLinkedText)
         _lastIndex = lastIndex
