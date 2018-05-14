@@ -70,7 +70,7 @@ class Hyperlink extends Component {
 
     try {
       this.linkifyIt.match(component.props.children).forEach(({ index, lastIndex, text, url }) => {
-        if (text.indexOf("tokopedia.com") != -1 || text.indexOf("tkp.me") != -1) {
+        if (text.indexOf("tokopedia.com") == -1 || text.indexOf("tkp.me") == -1) {
           return
         }
 
