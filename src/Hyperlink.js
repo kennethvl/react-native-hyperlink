@@ -53,7 +53,6 @@ class Hyperlink extends Component {
   }
 
   linkify(component){
-    debugger
     if (
       !this.linkifyIt.pretest(component.props.children)
       || !this.linkifyIt.test(component.props.children)
@@ -70,9 +69,11 @@ class Hyperlink extends Component {
     }
 
     try {
-      debugger
       this.linkifyIt.match(component.props.children).forEach(({ index, lastIndex, text, url }) => {
-        debugger
+        if (text.indexOf("tokopedia.com") != -1 || text.indexOf("tkp.me") != -1) {
+          return
+        }
+
         let nonLinkedText = component.props.children.substring(_lastIndex, index)
         nonLinkedText && elements.push(nonLinkedText)
         _lastIndex = lastIndex
@@ -111,8 +112,6 @@ class Hyperlink extends Component {
 
   parse (component) {
     let { props: { children} = {}, type: { displayName } = {} } = component
-
-    debugger
 
     if (!children)
       return component
@@ -156,11 +155,6 @@ export default class extends Component {
     const urlObject = mdurl.parse(url);
     urlObject.protocol = urlObject.protocol.toLowerCase();
     const normalizedURL = mdurl.format(urlObject)
-
-    debugger
-    console.log("😀 URL: " + url);
-    console.log("😀 URL Object: " + urlObject);
-    console.log("😀 Normalized URL: " + normalizedURL);
 
     Linking.canOpenURL(normalizedURL)
       .then(supported => supported && Linking.openURL(normalizedURL));
